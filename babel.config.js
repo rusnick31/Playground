@@ -1,4 +1,4 @@
-const bablePreset = [
+const babelPreset = [
   '@babel/preset-env',
   {
     targets: '> 0.25%, not dead',
@@ -8,6 +8,6 @@ const bablePreset = [
 ]
 
 module.exports = {
-  presets: [bablePreset],
+  presets: [babelPreset],
   plugins: ['@babel/plugin-proposal-class-properties']
 }

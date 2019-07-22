@@ -8,7 +8,10 @@ const babelRule = {
   }]
 };
 
-const htmlPLugin = new HtmlPlugin({ template: './static/template.html' });
+const htmlPluginOptions = {
+  template: './static/template.html'
+};
+const htmlPlugin = new HtmlPlugin(htmlPluginOptions);
 
 module.exports = {
   devtool: 'source-map',
@@ -17,7 +20,7 @@ module.exports = {
     rules: [babelRule]
   },
 
-  plugins: [htmlPLugin],
+  plugins: [htmlPlugin],
   
   devServer: {
     open: true
