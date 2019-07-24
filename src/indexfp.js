@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 
 const getEventName = event => event.toLowerCase().substring(2);
-const propsStartsWithOn = (value, key) => key.startsWith('on');
+const propStartsWithOn = (value, key) => key.startsWith('on');
 
 function addPropsTo(dom) {
   
@@ -9,8 +9,10 @@ function addPropsTo(dom) {
 
   const addPropTo = R.curry((dom, value, key) => dom[key] = value);
   
-  const addListener = R.useWith(addListenerTo(dom), [R.identity, getEventName])
-  const addToDom = R.ifElse(propsStartsWithOn, addListener, addPropTo(dom));
+  const addListener = R.useWith(addListenerTo(dom), [R.identity, getEventName]);
+  const addProp = addPropTo(dom);
+
+  const addToDom = R.ifElse(propStartsWithOn, addListener, addProp);
   
   return R.forEachObjIndexed(addToDom);
 }
