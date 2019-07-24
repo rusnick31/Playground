@@ -14,6 +14,8 @@ const htmlPluginOptions = {
 const htmlPlugin = new HtmlPlugin(htmlPluginOptions);
 
 module.exports = {
+  entry: './src/indexfp.js',
+
   devtool: 'source-map',
 
   module: {
