@@ -5,18 +5,15 @@ import './styles/main.scss';
 
 const container = document.getElementById('root');
 
-const element = {
+const getElement = () => ({
   type: 'div',
   props: {
     onClick: () => console.log('clicked'),
-    className: 'awe'
+    className: 'awe',
+    children: [ new Date().toLocaleTimeString() ]
   }
-};
+});
 
-function create(...args) {
-  console.log(...args);
-};
-
-<div className='swag'></div>
-
-render(element, container);
+setInterval(() => {
+  render(getElement(), container);
+}, 1000);

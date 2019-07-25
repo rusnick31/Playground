@@ -1,1 +1,1 @@
-export { default } from './renderfp';
+export { default } from './render';
