@@ -5,12 +5,15 @@ const propStartsWithOn = (value, key) => key.startsWith('on');
 
 function addPropsTo(dom) {
   
-  const addListenerTo = R.curry((dom, listener, event) => dom.addEventListener(event, listener));
+  const addListenerTo = R.curry((dom, listener, event) => {
+    const eventName = getEventName(event);
+    dom.addEventListener(eventName, listener)
+  });
 
   const addPropTo = R.curry((dom, value, key) => dom[key] = value);
   
-  const addListener = R.useWith(addListenerTo(dom), [R.identity, getEventName]);
   const addProp = addPropTo(dom);
+  const addListener = addListenerTo(dom);
 
   const addToDom = R.ifElse(propStartsWithOn, addListener, addProp);
   

@@ -1,4 +1,4 @@
-import render from '../index';
+import render from '../render';
 
 describe('index tests', () => {
   it('should test sum', () => {

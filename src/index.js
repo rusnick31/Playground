@@ -1,19 +1,14 @@
-function render(element, container) {
-  const { type, props } = element;
-  const dom = document.createElement(type);
+import render from './render';
+import './styles/main.scss';
 
-  const isListener = key => key.startsWith('on');
+const container = document.getElementById('root');
 
-  Object.entries(props).forEach(([key, value]) => {
-    if (isListener(key)) {
-      const event = key.toLowerCase().substring(2);
-      dom.addEventListener(event, value);
-    } else {
-      dom[key] = value;
-    }
-  });
+const element = {
+  type: 'div',
+  props: {
+    onClick: () => console.log('clicked'),
+    className: 'awe'
+  }
+};
 
-  container.append(dom);
-}
-
-export default render;
+render(element, container);
