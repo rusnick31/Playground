@@ -29,12 +29,4 @@ function render(element, container) {
   container.append(dom);
 }
 
-const element = {
-  type: 'div',
-  props: {
-    className: 'awe',
-    onClick: () => console.log('clicked')
-  }
-}
-
-render(element, document.getElementById('root'));
+export default render;

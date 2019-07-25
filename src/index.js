@@ -1,3 +1,5 @@
+/** @jsx create */
+
 import render from './render';
 import './styles/main.scss';
 
@@ -10,5 +12,11 @@ const element = {
     className: 'awe'
   }
 };
+
+function create(...args) {
+  console.log(...args);
+};
+
+<div className='swag'></div>
 
 render(element, container);

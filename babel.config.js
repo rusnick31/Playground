@@ -9,5 +9,5 @@ const babelPreset = [
 
 module.exports = {
   presets: [babelPreset],
-  plugins: ['@babel/plugin-proposal-class-properties']
+  plugins: ['@babel/plugin-proposal-class-properties', '@babel/plugin-transform-react-jsx']
 }
