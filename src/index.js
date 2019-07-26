@@ -1,7 +1,7 @@
 /** @jsx create */
 
 import render from './render';
-import './styles/main.scss';
+import '../styles/main.scss';
 
 const container = document.getElementById('root');
 

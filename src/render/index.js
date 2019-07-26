@@ -2,6 +2,16 @@ import { updateProps } from './helpers';
 
 const isString = val => typeof val === 'string';
 
+
+
+function reconcile(instance, element) {
+  if (instance === null) {
+    return instantiate(element);
+  }
+}
+
+
+let virtualDom = null;
 function render(element, container) {
   
   if (isString(element)) {
@@ -9,13 +19,7 @@ function render(element, container) {
     return;
   }
   
-  const { type, props } = element;
-  const { children, ...nextProps } = props;
-  const dom = document.createElement(type);
 
-  updateProps(dom, [], nextProps);
-
-  children.forEach(child => render(child, dom));
 
   if (container.lastChild) {
     container.replaceChild(dom, container.lastChild);
