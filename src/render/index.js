@@ -1,14 +1,6 @@
-import { updateProps } from './helpers';
+import { updateProps, instantiate } from './helpers';
 
 const isString = val => typeof val === 'string';
-
-
-
-function reconcile(instance, element) {
-  if (instance === null) {
-    return instantiate(element);
-  }
-}
 
 
 let virtualDom = null;
@@ -19,7 +11,8 @@ function render(element, container) {
     return;
   }
   
-
+  const instance = instantiate(element);
+  const dom = instance.dom;
 
   if (container.lastChild) {
     container.replaceChild(dom, container.lastChild);

@@ -1,4 +1,4 @@
-const babelPreset = [
+const env = [
   '@babel/preset-env',
   {
     targets: '> 0.25%, not dead',
@@ -8,6 +8,10 @@ const babelPreset = [
 ]
 
 module.exports = {
-  presets: [babelPreset],
-  plugins: ['@babel/plugin-proposal-class-properties', '@babel/plugin-transform-react-jsx']
+  presets: [env, '@babel/preset-typescript'],
+  plugins: [
+    '@babel/plugin-proposal-class-properties',
+    '@babel/plugin-proposal-object-rest-spread', 
+    '@babel/plugin-transform-react-jsx'
+  ]
 }

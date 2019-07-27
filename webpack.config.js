@@ -5,7 +5,7 @@ const CssExtractPlugin = require('mini-css-extract-plugin');
  * RULES
  */
 const babelRule = {
-  test: /\.js$/,
+  test: /\.(j|t)s$/,
   exclude: /node_modules/,
   use: ['babel-loader']
 };
@@ -34,12 +34,16 @@ const cssExtractPlugin = new CssExtractPlugin({
  * WEBPACK CONFIG
  */
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.ts',
 
   devtool: 'source-map',
 
   module: {
     rules: [babelRule, cssRule]
+  },
+  
+  resolve: {
+    extensions: ['.ts', '.js']
   },
 
   plugins: [htmlPlugin, cssExtractPlugin],
