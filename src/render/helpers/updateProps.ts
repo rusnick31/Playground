@@ -1,6 +1,6 @@
-const isListener = val => val.startsWith('on');
+const isListener = (val: string) => val.startsWith('on');
 
-function updateProps(dom, previousProps, nextProps) {
+function updateProps(dom: HTMLElement, previousProps: PropDictionary, nextProps: PropDictionary) {
   
   Object.entries(previousProps).forEach(([key, value]) => {
     if (isListener(key)) {

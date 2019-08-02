@@ -1,23 +1,6 @@
 import updateProps from './updateProps';
 
-interface Props {
-  children: Array<Element>;
-  [propName: string]: any;
-};
-
-interface Element {
-  type: string;
-  props: Props;
-  className: number;
-};
-
-interface Instance {
-  dom: HTMLElement;
-  element: Element;
-  childInstances: Array<Instance>;
-};
-
-function instantiate(element : Element): Instance {
+function instantiate(element : CustomElement): Instance {
   
   const { type, props } = element;
   const { children, ...nextProps } = props;
