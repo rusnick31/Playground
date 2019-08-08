@@ -46,7 +46,7 @@ describe('instantiate tests', () => {
       childInstances: []
     });
 
-    const childInstance = instance.childInstances[0];
+    const childInstance = instance.childInstances[0] as Instance;
 
     expect(instance.dom.lastChild).toBe(childInstance.dom);
 

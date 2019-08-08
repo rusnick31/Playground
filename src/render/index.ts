@@ -1,24 +1,22 @@
-import { instantiate } from './helpers';
+import { reconcile } from './helpers';
 
-const isString = (val:any): boolean => typeof val === 'string';
-
-
-let virtualDom = null;
+let virtualDom: Instance = null;
 function render(element: string | CustomElement, container: HTMLElement) {
-  
-  if (isString(element)) {
-    container.append(element as string);
+
+  // if (isString(element)) {
+  //   container.append(element as string);
+  //   return;
+  // }
+
+  if (virtualDom === null) {
+    const newInstance: Instance = reconcile(null, element as CustomElement);
+    virtualDom = newInstance;
+    container.append(newInstance.dom);
     return;
   }
   
-  const instance = instantiate(element as CustomElement);
-  const dom = instance.dom;
-
-  if (container.lastChild) {
-    container.lastChild.replaceWith(dom);
-  } else {
-    container.append(dom);
-  }
+  const instance = reconcile(virtualDom, element as CustomElement);
+  virtualDom = instance;
 }
 
 export default render;

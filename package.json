@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack -d",
     "start": "webpack-dev-server",
-    "test": "jest",
+    "test": "jest --watch",
     "td": "node --inspect node_modules/.bin/jest --watch --runInBand"
   },
   "repository": {

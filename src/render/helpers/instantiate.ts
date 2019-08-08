@@ -1,6 +1,14 @@
 import updateProps from './updateProps';
 
-function instantiate(element : CustomElement): Instance {
+const isString = (val:any): boolean => typeof val === 'string';
+
+function instantiate(element: string): string;
+function instantiate(element: CustomElement): Instance;
+function instantiate(element: any): any {
+
+  if (typeof element === 'string') {
+    return element;
+  }
   
   const { type, props } = element;
   const { children, ...nextProps } = props;
@@ -9,7 +17,10 @@ function instantiate(element : CustomElement): Instance {
   updateProps(dom, [], nextProps);
 
   const childInstances = children.map(instantiate);
-  childInstances.forEach(child => dom.append(child.dom));
+  childInstances.forEach((child: Instance | string) => {
+    const htmlElement = isString(child) ? child : (child as Instance).dom ;
+    dom.append(htmlElement);
+  });
 
   const instance = {
     dom,

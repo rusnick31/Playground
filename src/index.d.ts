@@ -14,5 +14,5 @@ interface CustomElement {
 interface Instance {
   dom: HTMLElement;
   element: CustomElement;
-  childInstances: Array<Instance>;
+  childInstances: Array<Instance | string>;
 }
