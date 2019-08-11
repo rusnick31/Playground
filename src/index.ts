@@ -14,7 +14,6 @@ const getElement = () => ({
   }
 });
 
-let isDone: boolean = true;
 setInterval(() => {
   render(getElement(), container);
 }, 1000);

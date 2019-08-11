@@ -3,20 +3,15 @@ import { reconcile } from './helpers';
 let virtualDom: Instance = null;
 function render(element: string | CustomElement, container: HTMLElement) {
 
-  // if (isString(element)) {
-  //   container.append(element as string);
-  //   return;
-  // }
-
-  if (virtualDom === null) {
-    const newInstance: Instance = reconcile(null, element as CustomElement);
-    virtualDom = newInstance;
-    container.append(newInstance.dom);
-    return;
+  if (!virtualDom) {
+    const instance = reconcile(virtualDom, element);
+    virtualDom = instance;
+    container.append(instance.dom);
   }
-  
-  const instance = reconcile(virtualDom, element as CustomElement);
+
+  const instance = reconcile(virtualDom, element);
   virtualDom = instance;
+  
 }
 
 export default render;

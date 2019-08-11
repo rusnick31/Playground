@@ -55,4 +55,61 @@ describe('reconciliation tests', () => {
 
   });
 
+  describe.only('when previousInstance and newElement have the same type', () => {
+    
+    it('should only update props in existing instance', () => {
+      
+      const previousProps = {
+        className: 'awesomeClass',
+        children: []
+      }
+      const previousElement = {
+        type: 'div',
+        props: previousProps
+      };
+
+      const instance = reconcile(null, previousElement);
+
+      const newElement = {
+        type: 'div',
+        props: {
+          className: 'newClass',
+          children: []
+        }
+      }
+
+      const newInstace = reconcile(instance, newElement);
+
+      expect(newInstace).toBe(instance);
+      expect(newInstace.dom).toBe(instance.dom);
+      expect(newInstace.element).toBe(instance.element);
+      expect(newInstace.element).toBe(previousElement);
+      expect(newInstace.element.props).not.toBe(previousProps);
+      expect(newInstace.element.props.className).toBe('newClass')
+    });
+
+    it('with the same amount of string children', () => {
+      const previousElement = {
+        type: 'p',
+        props: {
+          children: ['awesome text'],
+        }
+      };
+  
+      const previousInstance = reconcile(null, previousElement);
+  
+      const newElement = {
+        type: 'p',
+        props: {
+          children: ['new awesome text']
+        }
+      };
+  
+      const newInstance = reconcile(previousInstance, newElement);
+  
+      
+    });
+    
+  });
+
 })
