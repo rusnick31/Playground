@@ -12,14 +12,17 @@ describe('reconciliation tests', () => {
           children: ['awesome text']
         }
       }
-      const newInstance = reconcile(null, newElement);
-      const { dom, element, childInstances } = newInstance;
+
+      const { dom, element, childInstances } = reconcile(null, newElement);
       
       expect(element).toEqual(newElement);
       expect(dom.className).toBe('awesome');
-      
-      expect(childInstances).toContain('awesome text');
-      expect(dom.firstChild.nodeValue).toBe('awesome text')
+
+      const [ childInstance ] = childInstances;
+
+      expect(childInstance.dom.nodeValue).toBe('awesome text');
+      expect(childInstance.element).toBe('awesome text');
+      expect(childInstance.childInstances).toHaveLength(0);
     });
 
     it('should create new Instance from nested element', () => {
@@ -55,7 +58,32 @@ describe('reconciliation tests', () => {
 
   });
 
-  describe.only('when previousInstance and newElement have the same type', () => {
+  describe('when previousInstance and newElement types differ', () => {
+    it('should instantiate new element', () => {
+      const element = {
+        type: 'div',
+        props: {
+          children: []
+        }
+      };
+
+      const instance = reconcile(null, element);
+
+      const newElement = {
+        type: 'p',
+        props: {
+          children: []
+        }
+      };
+
+      const newInstance = reconcile(instance, newElement);
+
+      expect(newInstance).not.toBe(instance);
+      expect(newInstance.dom.nodeName).toBe('P');
+    })
+  });
+
+  describe('when previousInstance and newElement have the same type', () => {
     
     it('should only update props in existing instance', () => {
       
@@ -97,6 +125,7 @@ describe('reconciliation tests', () => {
       };
   
       const previousInstance = reconcile(null, previousElement);
+      const [ previousChild ] = previousInstance.childInstances;
   
       const newElement = {
         type: 'p',
@@ -106,8 +135,115 @@ describe('reconciliation tests', () => {
       };
   
       const newInstance = reconcile(previousInstance, newElement);
-  
+
+      const [ newChild ] = newInstance.childInstances;
+      expect(newChild).not.toBe(previousChild);
+      expect(newChild).toMatchObject({
+        dom: expect.any(Text),
+        element: 'new awesome text',
+        childInstances: []
+      });
+    });
+
+    it('when newElement has more children', () => {
+      const child = {
+        type: 'div',
+        props: {
+          children: []
+        }
+      };
       
+      const element = {
+        type: 'div',
+        props: {
+          children: [ child ]
+        }
+      };
+
+      const instance = reconcile(null, element);
+      const [ childInstance ] = instance.childInstances;
+
+      const newChildren = [
+        {
+          type: 'div',
+          props: {
+            children: []
+          }
+        },
+        {
+          type: 'p',
+          props: {
+            children: []
+          }
+        }
+      ];
+
+      const newElement = {
+        type: 'div',
+        props: {
+          children: newChildren
+        }
+      };
+
+      const newInstance = reconcile(instance, newElement);
+      const [ divChild, parChild ] = newInstance.childInstances;
+
+      expect(divChild).toBe(childInstance);
+      expect(parChild).toMatchObject({
+        dom: expect.any(HTMLParagraphElement),
+        element: { type: 'p' },
+        childInstances: []
+      });
+      console.log(newInstance.dom.childNodes);
+      expect(newInstance.dom.firstChild).toBe(divChild.dom);
+      expect(newInstance.dom.lastChild).toBe(parChild.dom);
+    });
+
+    it('when newElement has fewer children', () => {
+      
+      const children = [
+        {
+          type: 'div',
+          props: {
+            children: []
+          }
+        },
+        {
+          type: 'p',
+          props: {
+            children: []
+          }
+        }
+      ];
+
+      const element = {
+        type: 'div',
+        props: {
+          children
+        }
+      };
+
+      const instance = reconcile(null, element);
+
+      const newElement = {
+        type: 'div',
+        props: {
+          children: [{
+            type: 'div',
+            props: {
+              children: []
+            }
+          }]
+        }
+      };
+
+      const newInstace = reconcile(instance, newElement);
+      expect(newInstace.childInstances).toHaveLength(1);
+      const [ childInstance ] = newInstace.childInstances;
+
+      expect(newInstace.dom.childNodes).toHaveLength(1);
+      expect(newInstace.dom.firstChild).toBe(childInstance.dom);
+
     });
     
   });

@@ -2,6 +2,15 @@ import instantiate from '../instantiate';
 
 describe('instantiate tests', () => {
   
+  it('should instantiate string element', () => {
+    const element = 'newElement';
+    const instance = instantiate(element);
+
+    expect(instance.dom.nodeValue).toBe(element);
+    expect(instance.element).toBe(element);
+    expect(instance.childInstances).toHaveLength(0);
+  });
+
   it('should instantiate simple element without children', () => {
     const element = {
       type: 'div',
@@ -41,7 +50,7 @@ describe('instantiate tests', () => {
     const instance = instantiate(element);
 
     expect(instance.childInstances).toContainEqual({
-      dom: expect.any(Object),
+      dom: expect.any(HTMLElement),
       element: childElement,
       childInstances: []
     });
