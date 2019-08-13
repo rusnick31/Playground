@@ -1,12 +1,11 @@
 import updateProps from './updateProps';
-
-const isString = (val:any): boolean => typeof val === 'string';
+import { isString } from 'utils';
 
 function instantiate(element: string): Instance;
 function instantiate(element: CustomElement): Instance;
 function instantiate(element: any): any {
 
-  if (typeof element === 'string') {
+  if (isString(element)) {
     const instance = {
       dom: document.createTextNode(element),
       element,

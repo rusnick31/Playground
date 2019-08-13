@@ -1,3 +1,5 @@
+const { resolve } = require('path');
+
 const HtmlPlugin = require('html-webpack-plugin');
 const CssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -43,7 +45,10 @@ module.exports = {
   },
   
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
+    alias: {
+      utils: resolve(__dirname, 'src/utils')
+    }
   },
 
   plugins: [htmlPlugin, cssExtractPlugin],

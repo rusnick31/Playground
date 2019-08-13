@@ -1,4 +1,4 @@
-interface PropDictionary {
+interface PropDictionary {  
   [propName: string]: any;
 }
 

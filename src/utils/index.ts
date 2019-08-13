@@ -1,12 +1,12 @@
 const isString = (val:any): boolean => typeof val === 'string';
 
-const zip = (arr1, arr2) => {
+const zip = (arr1: any[], arr2: any[]) => {
   const config = {
     length: Math.max(arr1.length, arr2.length)
   };
-  const pair = (_, index) => [arr1[index], arr2[index]];
+  const pairUp = (_, index) => [arr1[index], arr2[index]];
   return Array.from(config)
-              .map(pair);
+              .map(pairUp);
 };
 
 export { isString, zip };
