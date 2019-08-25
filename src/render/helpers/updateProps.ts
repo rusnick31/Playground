@@ -1,6 +1,6 @@
 const isListener = (val: string) => val.startsWith('on');
 
-const addTo = (dom: HTMLElement) => ([key, value]) => {
+const addTo = (dom: HTMLElement | Text) => ([key, value]) => {
   if (key === 'children') return;
 
   if (isListener(key)) {
@@ -11,7 +11,7 @@ const addTo = (dom: HTMLElement) => ([key, value]) => {
   }
 };
 
-const removeFrom = (dom: HTMLElement) => ([key, value]) => {
+const removeFrom = (dom: HTMLElement | Text) => ([key, value]) => {
   if (key === 'children') return;
   
   if (isListener(key)) {
@@ -22,7 +22,7 @@ const removeFrom = (dom: HTMLElement) => ([key, value]) => {
   }
 };
 
-function updateProps(domElement: HTMLElement, previousProps: Props | [], nextProps: Props) {
+function updateProps(domElement: HTMLElement | Text, previousProps: Props | PropDictionary, nextProps: Props | PropDictionary) {
   
   Object.entries(previousProps)
         .forEach(removeFrom(domElement));

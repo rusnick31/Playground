@@ -11,4 +11,6 @@ const zip = (arr1: any[], arr2: any[]) => {
               .map(pairUp);
 };
 
-export { isString, zip, isNullOrUndef };
+const partial = (fn: Function, preset: any[]) => (rest: any[]) => fn(...preset, ...rest);
+
+export { isString, zip, isNullOrUndef, partial };

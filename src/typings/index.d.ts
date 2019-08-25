@@ -12,7 +12,7 @@ interface CustomElement {
 }
 
 interface Instance {
-  dom: HTMLElement;
-  element: CustomElement;
+  dom: HTMLElement | Text;
+  element: CustomElement | string;
   childInstances: Array<Instance>;
 }

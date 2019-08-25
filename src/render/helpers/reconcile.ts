@@ -1,56 +1,58 @@
 import instantiate from './instantiate';
 import updateProps from './updateProps';
-import { isString, zip, isNullOrUndef } from 'utils';
+import { isString, zip, isNullOrUndef, partial } from 'utils';
 
-function reconcile(previousInstance: Instance, newElement: CustomElement): Instance {
-  if (isNullOrUndef(previousInstance)) {
-    return instantiate(newElement);
+function reconcile(container: HTMLElement, instance: Instance, element: CustomElement | string): Instance {
+  if (isNullOrUndef(instance)) {
+    const newInstace = instantiate(element);
+    container.append(newInstace.dom);
+    return newInstace;
   }
 
-  if (isString(newElement)) {
-    const instance = instantiate(newElement);
-    previousInstance.dom.replaceWith(instance.dom);
+  if (isString(element) || isString(instance.element)) {
+    const instance = instantiate(element);
+    instance.dom.replaceWith(instance.dom);
     return instance;
   }
 
-  if (isNullOrUndef(newElement)) {
-    previousInstance.dom.remove();
+  if (isNullOrUndef(element)) {
+    instance.dom.remove();
     return null;
   }
 
-  if (previousInstance.element.type !== newElement.type) {
-    const newInstance = instantiate(newElement);
-    previousInstance.dom.replaceWith(newInstance.dom);
+  const previousElement = instance.element as CustomElement;
+  const nextElement = element as CustomElement;
+
+  if (previousElement.type !== nextElement.type) {
+    const newInstance = instantiate(element);
+    instance.dom.replaceWith(newInstance.dom);
     return newInstance;
   }
 
-  if (previousInstance.element.type === newElement.type) {
-    const previousProps = previousInstance.element.props;
-    const nextProps = newElement.props;
-    updateProps(previousInstance.dom, previousProps, nextProps);
-    previousInstance.element.props = newElement.props;
+  if (previousElement.type === nextElement.type) {
+    const previousProps = previousElement.props;
+    const nextProps = nextElement.props;
+    updateProps(instance.dom, previousProps, nextProps);
+    previousElement.props = nextElement.props;
     
-    const newChildInstances = reconcileChildren(previousInstance, newElement);
+    const newChildInstances = reconcileChildren(instance, element as CustomElement);
 
-    previousInstance.childInstances = newChildInstances;
+    instance.childInstances = newChildInstances;
 
-    return previousInstance;
+    return instance;
   }
 
 }
 
-function reconcileChildren(previousInstance: Instance, newElement: CustomElement) {
+function reconcileChildren(instance: Instance, element: CustomElement) {
 
-  const reconcilePair = ([childInstance, childElement]) => {
-    const newChildInstance = reconcile(childInstance, childElement);
-    // TODO: add third 'container' parameter to reconcile
-    if (!childInstance) {
-      previousInstance.dom.append(newChildInstance.dom);
-    }
-    return newChildInstance;
-  };
+  // const reconcilePair = ([childInstance, childElement]) => {
+  //   return reconcile(instance.dom as HTMLElement, childInstance, childElement);
+  // };
 
-  const instanceElementPairs = zip(previousInstance.childInstances, newElement.props.children);
+  const reconcilePair = partial(reconcile, [ instance.dom ]);
+
+  const instanceElementPairs = zip(instance.childInstances, element.props.children);
   return instanceElementPairs.map(reconcilePair).filter(Boolean)
 }
 

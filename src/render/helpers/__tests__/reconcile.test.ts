@@ -1,6 +1,6 @@
 import reconcile from '../reconcile';
 
-describe('reconciliation tests', () => {
+describe.only('reconciliation tests', () => {
   
   describe('when previousInstance is null', () => {
     
@@ -58,29 +58,52 @@ describe('reconciliation tests', () => {
 
   });
 
-  describe('when previousInstance and newElement types differ', () => {
+  describe.only('when previousInstance and newElement types differ', () => {
     it('should instantiate new element', () => {
       const element = {
         type: 'div',
         props: {
+          className: 'div',
           children: []
         }
       };
+      const container = document.createElement('div');
+      const instance = reconcile(container, null, element);
 
-      const instance = reconcile(null, element);
+      expect(container.firstChild).toBe(instance.dom);
 
       const newElement = {
         type: 'p',
         props: {
+          className: 'p',
           children: []
         }
       };
-
-      const newInstance = reconcile(instance, newElement);
+      const newInstance = reconcile(container, instance, newElement);
 
       expect(newInstance).not.toBe(instance);
+      expect(newInstance.element.props.className).toBe('p');
       expect(newInstance.dom.nodeName).toBe('P');
-    })
+    });
+
+    it('should instantiate new string element', () => {
+      const element = {
+        type: 'div',
+        props: {
+          className: 'div',
+          children: []
+        }
+      }
+      const container = document.createElement('div');
+      const instance = reconcile(container, null, element);
+
+      const newElement = 'string';
+      const newInstance = reconcile(container, instance, newElement);
+
+      expect(newInstance).not.toBe(instance);
+      expect(newInstance.dom.nodeValue).toBe(newElement);
+      expect(newInstance.element).toBe(newElement);
+    });
   });
 
   describe('when previousInstance and newElement have the same type', () => {
@@ -194,7 +217,6 @@ describe('reconciliation tests', () => {
         element: { type: 'p' },
         childInstances: []
       });
-      console.log(newInstance.dom.childNodes);
       expect(newInstance.dom.firstChild).toBe(divChild.dom);
       expect(newInstance.dom.lastChild).toBe(parChild.dom);
     });

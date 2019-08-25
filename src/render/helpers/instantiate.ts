@@ -1,30 +1,25 @@
 import updateProps from './updateProps';
 import { isString } from 'utils';
 
-function instantiate(element: string): Instance;
-function instantiate(element: CustomElement): Instance;
-function instantiate(element: any): any {
+function instantiate(element: CustomElement | string): Instance {
 
   if (isString(element)) {
     const instance = {
-      dom: document.createTextNode(element),
+      dom: document.createTextNode(element as string),
       element,
       childInstances: []
     };
     return instance;
   }
   
-  const { type, props } = element;
+  const { type, props } = element as CustomElement;
   const { children, ...nextProps } = props;
   const dom = document.createElement(type);
 
   updateProps(dom, [], nextProps);
 
   const childInstances = children.map(instantiate);
-  childInstances.forEach((child: Instance | string) => {
-    const htmlElement = isString(child) ? child : (child as Instance).dom ;
-    dom.append(htmlElement);
-  });
+  childInstances.forEach(child => dom.append(child.dom));
 
   const instance = {
     dom,
