@@ -7,7 +7,7 @@
     "build": "webpack -d",
     "start": "webpack-dev-server",
     "test": "jest --watch",
-    "td": "node --inspect node_modules/.bin/jest --watch --runInBand"
+    "td": "node --inspect node_modules/.bin/jest --runInBand --watch"
   },
   "repository": {
     "type": "git",

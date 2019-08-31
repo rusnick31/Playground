@@ -35,9 +35,7 @@ function reconcile(container: HTMLElement, instance: Instance, element: CustomEl
     updateProps(instance.dom, previousProps, nextProps);
     previousElement.props = nextElement.props;
     
-    const newChildInstances = reconcileChildren(instance, element as CustomElement);
-
-    instance.childInstances = newChildInstances;
+    instance.childInstances = reconcileChildren(instance, element as CustomElement);
 
     return instance;
   }
@@ -45,15 +43,10 @@ function reconcile(container: HTMLElement, instance: Instance, element: CustomEl
 }
 
 function reconcileChildren(instance: Instance, element: CustomElement) {
-
-  // const reconcilePair = ([childInstance, childElement]) => {
-  //   return reconcile(instance.dom as HTMLElement, childInstance, childElement);
-  // };
-
   const reconcilePair = partial(reconcile, [ instance.dom ]);
 
   const instanceElementPairs = zip(instance.childInstances, element.props.children);
-  return instanceElementPairs.map(reconcilePair).filter(Boolean)
+  return instanceElementPairs.map(reconcilePair).filter(Boolean);
 }
 
 export default reconcile;

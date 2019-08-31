@@ -1,8 +1,8 @@
 import reconcile from '../reconcile';
 
-describe.only('reconciliation tests', () => {
+describe('reconciliation tests', () => {
   
-  describe('when previousInstance is null', () => {
+  describe('when instance is null', () => {
     
     it('should create instance from simple element', () => {
       const newElement = {
@@ -11,22 +11,26 @@ describe.only('reconciliation tests', () => {
           className: 'awesome',
           children: ['awesome text']
         }
-      }
+      };
+      const container = document.createElement('div');
 
-      const { dom, element, childInstances } = reconcile(null, newElement);
+      const { dom, element, childInstances } = reconcile(container, null, newElement);
       
       expect(element).toEqual(newElement);
-      expect(dom.className).toBe('awesome');
+      expect(dom).toBeInstanceOf(HTMLElement);
+      expect((dom as HTMLElement).className).toBe('awesome');
 
       const [ childInstance ] = childInstances;
+      const firstChild = dom.firstChild;
 
+      expect(firstChild).toBe(childInstance.dom);
       expect(childInstance.dom.nodeValue).toBe('awesome text');
       expect(childInstance.element).toBe('awesome text');
       expect(childInstance.childInstances).toHaveLength(0);
     });
 
     it('should create new Instance from nested element', () => {
-      const pElement = {
+      const childElement = {
         type: 'p',
         props: {
           className: 'p',
@@ -38,27 +42,36 @@ describe.only('reconciliation tests', () => {
         type: 'div',
         props: {
           className: 'div',
-          children: [pElement, 'textChild']
+          children: [childElement, 'textChild']
         }
-      }
-      const newInstance = reconcile(null, newElement);
-      const { dom, element, childInstances } = newInstance;
+      };
+
+      const container = document.createElement('div');
+
+      const { dom, element, childInstances } = reconcile(container, null, newElement);
       
       expect(element).toEqual(newElement);
-      expect(dom.className).toBe('div');
+      expect((dom as HTMLElement).className).toBe('div');
       expect(childInstances).toHaveLength(2);
       expect(dom.childNodes).toHaveLength(2);
 
-      const firstParNode = dom.firstChild as HTMLElement;
-      expect(firstParNode.className).toBe('p');
-      expect(firstParNode.firstChild.nodeValue).toBe('text');
+      const [ firstChildInstance, secondChildInstance ] = childInstances;
+      const [ firstChildNode, secondChildNode ] = dom.childNodes;
 
-      expect(dom.lastChild.nodeValue).toBe('textChild');
+      expect(firstChildInstance.dom).toBe(firstChildNode);
+      expect(secondChildInstance.dom).toBe(secondChildNode);
+      expect(firstChildInstance.element).toBe(childElement);
+      expect(secondChildInstance.element).toBe('textChild');
+
+      expect((firstChildNode as HTMLElement).className).toBe('p');
+      expect(firstChildNode.firstChild.nodeValue).toBe('text');
+
+      expect(secondChildNode.nodeValue).toBe('textChild');
     });
 
   });
 
-  describe.only('when previousInstance and newElement types differ', () => {
+  describe('when previousInstance and newElement types differ', () => {
     it('should instantiate new element', () => {
       const element = {
         type: 'div',
@@ -119,7 +132,9 @@ describe.only('reconciliation tests', () => {
         props: previousProps
       };
 
-      const instance = reconcile(null, previousElement);
+      const container = document.createElement('div');
+
+      const instance = reconcile(container, null, previousElement);
 
       const newElement = {
         type: 'div',
@@ -129,7 +144,7 @@ describe.only('reconciliation tests', () => {
         }
       }
 
-      const newInstace = reconcile(instance, newElement);
+      const newInstace = reconcile(container, instance, newElement);
 
       expect(newInstace).toBe(instance);
       expect(newInstace.dom).toBe(instance.dom);
@@ -146,8 +161,9 @@ describe.only('reconciliation tests', () => {
           children: ['awesome text'],
         }
       };
+      const container = document.createElement('div');
   
-      const previousInstance = reconcile(null, previousElement);
+      const previousInstance = reconcile(container, null, previousElement);
       const [ previousChild ] = previousInstance.childInstances;
   
       const newElement = {
@@ -157,7 +173,7 @@ describe.only('reconciliation tests', () => {
         }
       };
   
-      const newInstance = reconcile(previousInstance, newElement);
+      const newInstance = reconcile(container, previousInstance, newElement);
 
       const [ newChild ] = newInstance.childInstances;
       expect(newChild).not.toBe(previousChild);
@@ -183,7 +199,9 @@ describe.only('reconciliation tests', () => {
         }
       };
 
-      const instance = reconcile(null, element);
+      const container = document.createElement('div');
+
+      const instance = reconcile(container, null, element);
       const [ childInstance ] = instance.childInstances;
 
       const newChildren = [
@@ -208,7 +226,7 @@ describe.only('reconciliation tests', () => {
         }
       };
 
-      const newInstance = reconcile(instance, newElement);
+      const newInstance = reconcile(container, instance, newElement);
       const [ divChild, parChild ] = newInstance.childInstances;
 
       expect(divChild).toBe(childInstance);
@@ -245,7 +263,9 @@ describe.only('reconciliation tests', () => {
         }
       };
 
-      const instance = reconcile(null, element);
+      const container = document.createElement('div');
+
+      const instance = reconcile(container, null, element);
 
       const newElement = {
         type: 'div',
@@ -259,7 +279,7 @@ describe.only('reconciliation tests', () => {
         }
       };
 
-      const newInstace = reconcile(instance, newElement);
+      const newInstace = reconcile(container, instance, newElement);
       expect(newInstace.childInstances).toHaveLength(1);
       const [ childInstance ] = newInstace.childInstances;
 
@@ -270,4 +290,4 @@ describe.only('reconciliation tests', () => {
     
   });
 
-})
+});
